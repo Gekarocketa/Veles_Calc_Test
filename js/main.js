@@ -13,6 +13,7 @@ window.dimmingLevel = parseInt(localStorage.getItem('calcDimming')) || 50;
 window.wallpaperUrl = localStorage.getItem('calcWallpaper') || '';
 window.lastAppliedEffect = localStorage.getItem('calcLastAppliedEffect') || 'none';
 window.isRandomGreeting = JSON.parse(localStorage.getItem('calcRandomGreeting')) || false;
+window.currentRandomPhrase = localStorage.getItem('calcLastRandomPhrase') || "Hello,";
 window.userName = localStorage.getItem('calcUserName') || '';
 window.greetingPrefix = localStorage.getItem('calcGreetingPrefix') || '';
 window.greetingPos = localStorage.getItem('calcGreetingPos') || 'top-right';
@@ -86,13 +87,15 @@ window.addEventListener('load', () => {
     applyProFeatures();
 
     // 5. Update Greeting
-    updateUserGreeting();
+    if (window.isRandomGreeting) {
+        // Мы не вызываем updateRandomPhrase(), чтобы фраза не менялась при каждом F5 (это бесит)
+        // Мы просто берем ту, что сохранили выше.
+    }
 
-    // 6. Visual Effects & Wallpaper (Main Logic)
-    // false = НЕ форсировать сброс прозрачности при перезагрузке страницы
+    // Теперь запускаем визуал. Теперь он не упадет!
     applyVisualEffects(false);
 
-    // 7. Render History
+    updateUserGreeting(); // Обновляем текст в заголовке
     renderHistory();
 
     // 8. BTC Lock UI
