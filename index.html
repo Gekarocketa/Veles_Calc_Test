@@ -460,14 +460,22 @@
                     <button class="btn-clear-wallpaper" onclick="clearWallpaper()">Clear Wallpaper</button>
                 </div>
                 <div class="settings-row">
-                    <label class="settings-label">Dimming <span id="dimmingValue">50%</span></label>
+                    <label class="settings-label">Wallpaper <span id="dimmingValue">50%</span></label>
                     <input type="range" class="settings-slider" id="dimmingSlider" min="0" max="100" value="50">
                 </div>
+            </div>
+            <div class="settings-row">
+                <label class="settings-label">Particle <span id="particleOpacityValue">70%</span></label>
+                <input type="range" class="settings-slider" id="particleOpacitySlider" min="0" max="100" value="70">
             </div>
         </div>
     </div>
 
-    <div id="particleContainer"></div>
+    <!-- Контейнер для частиц НАД калькулятором (30%) -->
+    <div id="particleContainerFront"></div>
+
+    <!-- Контейнер для частиц ЗА калькулятором (70%) -->
+    <div id="particleContainerBack"></div>
 
     <!-- Background Layer for Custom Wallpaper -->
     <div id="bg-layer">
@@ -486,6 +494,7 @@
     <script src="js/btc.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/main.js"></script>
+
 
 
     <!-- Update Notification Modal -->
