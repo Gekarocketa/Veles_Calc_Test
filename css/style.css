@@ -1,0 +1,1882 @@
+:root {
+    /* Default Dark Theme - Updated to Dark Gray */
+    --bg-color: #1a1a1a;
+    --card-bg: rgba(30, 30, 30, 0.75);
+    --text-color: #ffffff;
+    --primary-accent: #3A7DFF;
+    --secondary-accent: #2CD4A7;
+    --btn-bg: #2c2c2c;
+    --btn-hover: #3a3a3a;
+    --error-color: #ff4d4d;
+    --border-color: rgba(255, 255, 255, 0.1);
+    --input-bg: rgba(0, 0, 0, 0.5);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+}
+
+/* Watermark */
+.watermark {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.05);
+    font-weight: 300;
+    pointer-events: none;
+    z-index: 1;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Left Sidebar - Help Panel */
+.help-panel {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 800px;
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-right: 1px solid var(--border-color);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease;
+    z-index: 10;
+    z-index: 10;
+    box-shadow: 0 24px 24px rgba(0, 0, 0, 0.4);
+}
+
+.help-panel.hidden {
+    transform: translateX(-100%);
+}
+
+/* Center Workspace */
+.workspace {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 20px;
+    margin-left: 0;
+    transition: margin-left 0.3s ease;
+}
+
+.help-panel:not(.hidden)~.workspace {
+    margin-left: 800px;
+}
+
+/* Calculator Column Wrapper */
+.calculator-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Center Greeting Style */
+.center-greeting {
+    text-align: center;
+    color: var(--secondary-accent);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    animation: fadeIn 0.5s ease;
+    font-family: 'Inter', sans-serif;
+    transition: color 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Title */
+.app-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: -0.5px;
+    font-family: 'Inter', sans-serif;
+    opacity: 0.8;
+    margin: 0 0 30px 0;
+}
+
+.title-lets {
+    color: var(--secondary-accent);
+    transition: color 0.3s ease;
+}
+
+
+.title-exchange {
+    color: var(--primary-accent);
+    transition: color 0.3s ease;
+}
+
+/* Mac Style Overrides (Orange Priority) */
+[data-btn-style="mac"] .title-lets {
+    color: #ffffff;
+}
+
+[data-btn-style="mac"] .title-exchange {
+    color: #FF9F0A;
+}
+
+/* Force Mac Orange for Specific Elements (Overrides Seasonal Themes) */
+body[data-btn-style="mac"] .btc-icon {
+    color: #FF9F0A !important;
+}
+
+body[data-btn-style="mac"] #btcPriceDisplay,
+body[data-btn-style="mac"] .btc-price-display {
+    color: #FF9F0A !important;
+}
+
+body[data-btn-style="mac"] .btn-delta-header {
+    color: #FF9F0A !important;
+    border-color: rgba(255, 159, 10, 0.3) !important;
+}
+
+body[data-btn-style="mac"] .btn-delta-header.active {
+    background: #FF9F0A !important;
+    color: white !important;
+}
+
+body[data-btn-style="mac"] .history-res-delta {
+    color: #FF9F0A !important;
+}
+
+.center-group {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+
+.help-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+}
+
+.help-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    letter-spacing: 0.5px;
+    font-family: 'Inter', sans-serif;
+}
+
+.toggle-help-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: #aaa;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+}
+
+.toggle-help-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--primary-accent);
+    color: var(--text-color);
+}
+
+.help-content {
+    flex: 1;
+    overflow: auto;
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+}
+
+.add-row-btn {
+    margin-top: 16px;
+    padding: 10px 16px;
+    background: rgba(58, 125, 255, 0.1);
+    border: 1px solid var(--primary-accent);
+    color: var(--primary-accent);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.2s;
+    align-self: flex-start;
+}
+
+.add-row-btn:hover {
+    background: rgba(58, 125, 255, 0.2);
+}
+
+/* Table Styles */
+.partners-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.partners-table thead {
+    position: sticky;
+    top: 0;
+    background: var(--card-bg);
+    z-index: 1;
+}
+
+.partners-table th {
+    text-align: left;
+    padding: 12px 8px;
+    color: #888;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.partners-table th.text-center {
+    text-align: center;
+}
+
+/* Column width constraints */
+/* Partner column */
+.partners-table th:nth-child(1),
+.partners-table td:nth-child(1) {
+    max-width: 1%;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+}
+
+/* Coins column */
+.partners-table th:nth-child(4),
+.partners-table td:nth-child(4) {
+    max-width: 150px;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+}
+
+/* Details column - wider and normal text wrapping */
+.partners-table th:nth-child(5),
+.partners-table td:nth-child(5) {
+    min-width: 140px;
+    max-width: 180px;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: anywhere;
+}
+
+/* Delete column */
+.partners-table th:nth-child(7),
+.partners-table td:nth-child(7) {
+    width: 50px;
+    text-align: center;
+}
+
+.partners-table td {
+    padding: 12px 8px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
+    vertical-align: middle;
+}
+
+.delete-row-btn {
+    background: transparent;
+    border: 1px solid #cf352e;
+    color: #cf352e;
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.2s;
+    font-family: 'Inter', sans-serif;
+}
+
+.delete-row-btn:hover {
+    background: #cf352e;
+    color: white;
+}
+
+.partners-table td[contenteditable="true"]:focus {
+    outline: 1px solid var(--primary-accent);
+    outline-offset: -1px;
+    background: rgba(58, 125, 255, 0.1);
+}
+
+.partners-table td.text-center {
+    text-align: center;
+}
+
+.partners-table td.text-left {
+    text-align: left;
+}
+
+/* --- Potato Mode (Performance Overrides) --- */
+body[data-perf="potato"] {
+    background-color: #252525 !important;
+}
+
+body[data-perf="potato"] * {
+    transition: none !important;
+    animation: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    /* Optional: Make it super square/fast? Keeping rounded for now but simplifying is key */
+}
+
+body[data-perf="potato"] .calculator,
+body[data-perf="potato"] .help-panel,
+body[data-perf="potato"] .history-panel,
+body[data-perf="potato"] .btc-widget,
+body[data-perf="potato"] .modal-content,
+body[data-perf="potato"] .settings-modal,
+/* Added settings-modal */
+body[data-perf="potato"] .header-left button,
+body[data-perf="potato"] .btn-delta-header {
+    background: #252525 !important;
+    border: 1px solid #444 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+}
+
+body[data-perf="potato"] .display-container,
+body[data-perf="potato"] .btn-operation,
+body[data-perf="potato"] .btn-num,
+body[data-perf="potato"] .btc-input-group input,
+body[data-perf="potato"] input {
+    background: #333 !important;
+    border: 1px solid #444 !important;
+    color: #ddd !important;
+}
+
+body[data-perf="potato"] .history-item:hover {
+    background: #333 !important;
+}
+
+body[data-perf="potato"] .btn-equal {
+    background: var(--primary-accent) !important;
+    box-shadow: none !important;
+}
+
+/* --- BTC Converter Styles --- */
+.btc-input-group input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: var(--text-color);
+    padding: 8px 12px;
+    font-size: 1rem;
+    font-family: 'Roboto Mono', monospace;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.btc-input-group input:focus {
+    border-color: rgba(58, 125, 255, 0.5);
+    box-shadow: 0 0 0 2px rgba(58, 125, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Badge Styles */
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.badge-float-green {
+    background: #1e3a29;
+    color: #2CD4A7;
+}
+
+.badge-float-red {
+    background: #3a1e1e;
+    color: #ff4d4d;
+}
+
+.badge-float-orange {
+    background: #3a2e1e;
+    color: #ff8c42;
+}
+
+.badge-autorefund-no {
+    background: #3a2e1e;
+    color: #ff8c42;
+}
+
+.badge-autorefund-aml {
+    background: #1e3a29;
+    color: #2CD4A7;
+}
+
+.badge-autorefund-error {
+    background: #3a1e2e;
+    color: #ff6b9d;
+}
+
+.icon-placeholder {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: #444;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Calculator - Fixed Width */
+/* Calculator - Fixed Width */
+.calculator {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 30px;
+    border-radius: 24px;
+    width: 650px;
+    flex-shrink: 0;
+    box-shadow: 0 24px 24px rgba(0, 0, 0, 0.2), 0 0 1px 1px var(--border-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.display-container {
+    width: 100%;
+    height: 60px;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0;
+    position: relative;
+    /* Needed for tooltip positioning */
+    cursor: pointer;
+}
+
+/* Copy Tooltip */
+.copy-tooltip {
+    position: absolute;
+    top: -70px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(30, 30, 30, 0.9);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+    font-weight: 500;
+    z-index: 20;
+    margin-top: 10px;
+}
+
+.copy-tooltip.visible {
+    opacity: 1;
+    margin-top: 0;
+}
+
+#display {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    text-align: right;
+    outline: none;
+    padding: 0 15px 10px 15px;
+    font-family: "SF Mono", "Menlo", "Roboto Mono", monospace;
+    font-weight: 500;
+    transition: all 0.2s, font-size 0.1s ease;
+}
+
+#display:focus {
+    outline: none;
+    box-shadow: none;
+    border: none;
+}
+
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+/* Button Defaults (Theme Dependent) */
+button {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%), var(--btn-bg);
+    border: none;
+    color: var(--text-color);
+    font-size: 1.3rem;
+    padding: 22px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+button:hover {
+    background: var(--btn-hover);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Default Operations (Theme Dependent for BG, Text is typically white or contrast) */
+.btn-operation {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%), var(--primary-accent);
+    color: white;
+    font-weight: 600;
+}
+
+/* Specific overrides for Light Theme Default Operations if needed, but var(--primary-accent) handles it */
+
+.btn-equals {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%), var(--secondary-accent);
+    color: white;
+    /* Made white for better contrast in general */
+    font-weight: 700;
+}
+
+.btn-red {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%), #cf352e;
+    color: white;
+}
+
+.btn-func {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%), var(--btn-bg);
+    /* Slightly simpler for func buttons to match number buttons in default style or use specific gray */
+    filter: brightness(1.2);
+    /* Just a bit lighter than numbers */
+}
+
+.span-2 {
+    grid-column: span 2;
+}
+
+/* --- MAC BUTTON STYLE OVERRIDES --- */
+
+/* Scope specifically to the calculator grid to avoid breaking other buttons */
+[data-btn-style="mac"] .calculator .buttons button {
+    transition: all 0.2s ease;
+    /* Ensure transitions exist */
+}
+
+/* 1. Operations are always Orange */
+[data-btn-style="mac"] .calculator .btn-operation,
+[data-btn-style="mac"] .calculator .btn-equals {
+    background: #FF9F0A !important;
+    color: white !important;
+}
+
+[data-btn-style="mac"] .calculator .btn-operation:hover,
+[data-btn-style="mac"] .calculator .btn-equals:hover {
+    background: #ffb84d !important;
+    /* Brighter orange */
+}
+
+/* 2. Top Row (AC, DEL, %) */
+[data-btn-style="mac"] .calculator .btn-red,
+[data-btn-style="mac"] .calculator .btn-func {
+    background: #A5A5A5 !important;
+    color: black !important;
+}
+
+[data-btn-style="mac"] .calculator .btn-red:hover,
+[data-btn-style="mac"] .calculator .btn-func:hover {
+    background: #d4d4d2 !important;
+    /* Lighter gray */
+}
+
+/* 3. Number Buttons (Mac Dark Mode) */
+/* Scope to buttons inside .calculator that are NOT special classes */
+[data-btn-style="mac"] .calculator button:not(.btn-operation):not(.btn-equals):not(.btn-red):not(.btn-func) {
+    background: #333333 !important;
+    color: white !important;
+}
+
+[data-btn-style="mac"] .calculator button:not(.btn-operation):not(.btn-equals):not(.btn-red):not(.btn-func):hover {
+    background: #4d4d4d !important;
+    /* Lighter dark gray */
+}
+
+/* 4. History Colors (Orange Accents for Mac) */
+[data-btn-style="mac"] .history-res {
+    color: #FF9F0A;
+}
+
+[data-btn-style="mac"] .history-item:hover {
+    border-bottom-color: rgba(255, 159, 10, 0.3);
+    background: rgba(255, 159, 10, 0.1);
+}
+
+/* History Panel */
+.history-panel {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 24px;
+    width: 520px;
+    flex-shrink: 0;
+    max-height: 600px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 24px 24px rgba(0, 0, 0, 0.4), 0 0 1px 1px rgba(255, 255, 255, 0.08);
+
+    /* Transition for Pro Features (Horizontal Shrink) */
+    transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.history-panel.compact {
+    width: 360px;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+}
+
+.history-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    letter-spacing: 0.5px;
+    font-family: 'Inter', sans-serif;
+}
+
+.history-header button {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: #aaa;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.history-header button:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--primary-accent);
+    color: var(--text-color);
+}
+
+.history-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.history-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.95rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-radius: 8px;
+    margin-bottom: 4px;
+}
+
+.history-item:hover {
+    background: rgba(58, 125, 255, 0.1);
+    border-bottom-color: rgba(58, 125, 255, 0.2);
+}
+
+.history-expr {
+    font-size: 0.95em;
+    color: #fff;
+    font-weight: 500;
+    font-family: "SF Mono", "Menlo", "Roboto Mono", monospace;
+}
+
+.history-res {
+    color: var(--secondary-accent);
+    font-weight: 700;
+    font-family: "SF Mono", "Menlo", "Roboto Mono", monospace;
+}
+
+.history-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    align-items: center;
+}
+
+.history-time {
+    font-size: 0.75rem;
+    color: #888;
+    font-family: 'Inter', sans-serif;
+}
+
+.history-hint {
+    font-size: 0.8rem;
+    color: #666;
+    margin-bottom: 12px;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Top Left Controls Wrapper */
+.top-left-controls {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 1001;
+    /* Above Help Panel */
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.top-left-con.settings-info {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    /* Ensure it behaves as a container */
+    gap: 10px;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.top-left-controls.panel-open-state {
+    /* Slide to the right side of the help panel (approx 800px width - container width - padding) */
+    /* Using a calculation to stick it near the edge for desktop */
+    transform: translateX(610px);
+}
+
+/* Generic Ghost Button Style */
+.ghost-btn {
+    background: rgba(30, 30, 30, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #888;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: all 0.2s;
+    font-weight: 500;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ghost-btn:hover {
+    background: var(--primary-accent);
+    color: white;
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(58, 125, 255, 0.3);
+}
+
+/* Global Seasonal Button Hover Glows */
+.calculator .btn-operation:hover,
+.calculator .btn-equals:hover,
+.calculator .btn-red:hover,
+.nav-control-btn:hover,
+.fee-btn:hover,
+.btn-delta-header:hover,
+.settings-close:hover,
+.add-row-btn:hover,
+.delete-row-btn:hover,
+.btn-clear-wallpaper:hover {
+    box-shadow: 0 0 15px var(--primary-accent) !important;
+    border-color: var(--primary-accent) !important;
+}
+
+/* Mac Mode Override for Calc Buttons Glow - Strictly for Ops */
+body[data-btn-style="mac"] .calculator .btn-operation:hover,
+body[data-btn-style="mac"] .calculator .btn-equals:hover,
+body[data-btn-style="mac"] .calculator .btn-red:hover {
+    box-shadow: 0 0 15px #FF9F0A !important;
+}
+
+/* Non-calc buttons in Mac mode still follow seasonal accents unless specified */
+body[data-btn-style="mac"] .btn-delta-header:hover,
+body[data-btn-style="mac"] .btn-delta-header.active {
+    box-shadow: 0 0 15px #FF9F0A !important;
+    border-color: #FF9F0A !important;
+}
+
+.ghost-btn svg {
+    fill: currentColor;
+    width: 16px;
+    height: 16px;
+}
+
+.nav-control-btn {
+    background: rgba(30, 30, 30, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    padding: 10px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+}
+
+.nav-control-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+.fee-btn {
+    background: rgba(30, 30, 30, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--secondary-accent);
+    width: 55px;
+    height: 35px !important;
+    padding: 0 !important;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body[data-btn-style="mac"] .fee-btn {
+    color: #FF9F0A !important;
+}
+
+.nav-control-btn:hover,
+.fee-btn:hover {
+    border-color: var(--primary-accent);
+    box-shadow: 0 0 15px var(--primary-accent);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+body[data-btn-style="mac"] .fee-btn:hover {
+    border-color: #FF9F0A !important;
+    box-shadow: 0 0 15px #FF9F0A !important;
+}
+
+.icon-btn {
+    width: 48px !important;
+    height: 48px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+/* Danger Ghost Button (Red on Hover) */
+.btn-ghost-danger {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: #888;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+    font-weight: 500;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-ghost-danger:hover {
+    background: rgba(207, 53, 46, 0.1);
+    border-color: #cf352e;
+    color: #cf352e;
+    box-shadow: 0 4px 12px rgba(207, 53, 46, 0.2);
+}
+
+/* Settings Modal */
+.settings-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    background: var(--card-bg);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 24px 40px rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    opacity: 1;
+    /* Smooth Height Morphing */
+    transition: opacity 0.2s, transform 0.2s, height 0.3s cubic-bezier(0.25, 1, 0.5, 1), width 0.3s ease;
+    overflow: hidden;
+}
+
+.settings-modal.hidden {
+    display: none;
+}
+
+.settings-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.settings-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-color);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+}
+
+.settings-close {
+    background: var(--btn-bg);
+    border: none;
+    color: var(--text-color);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    transition: background 0.2s;
+}
+
+.settings-close:hover {
+    background: var(--btn-hover);
+    color: var(--text-color);
+}
+
+.settings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.settings-label {
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+.settings-select {
+    background: var(--btn-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    font-family: inherit;
+}
+
+/* iOS Switch */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 28px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #3a3a3a;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input:checked+.slider {
+    background-color: var(--secondary-accent);
+}
+
+input:checked+.slider:before {
+    transform: translateX(22px);
+}
+
+/* Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 90;
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+/* Tab Bar Styles */
+.tab-bar {
+    display: flex;
+    background: rgba(30, 30, 30, 0.5);
+    padding: 4px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.tab-item {
+    flex: 1;
+    text-align: center;
+    padding: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #888;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+    position: relative;
+    z-index: 2;
+}
+
+.tab-item.active {
+    color: white;
+    background: rgba(255, 255, 255, 0.1);
+    font-weight: 600;
+}
+
+.settings-content.hidden {
+    display: none;
+}
+
+/* Input Field Style for Settings */
+.input-std {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.input-std:focus {
+    border-color: var(--primary-accent);
+}
+
+.input-help {
+    font-size: 0.75rem;
+    color: #888;
+    margin-top: 4px;
+    margin-bottom: 16px;
+    display: block;
+}
+
+/* Dimming Slider */
+.settings-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    max-width: 120px;
+    height: 4px;
+    background: #444;
+    border-radius: 2px;
+    outline: none;
+}
+
+.settings-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.settings-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+/* --- Background Layer & Overlay --- */
+#bg-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: background-image 0.5s ease-in-out;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #1a1a1a;
+    /* Base dark color */
+    transition: opacity 0.3s ease;
+}
+
+/* --- User Greeting (Top Right) --- */
+.user-greeting {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(30, 30, 30, 0.6);
+    padding: 8px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #ccc;
+    z-index: 10;
+    animation: slideInRight 0.5s ease-out;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* --- Mac Mode Override for Greetings --- */
+body[data-btn-style="mac"] .user-greeting,
+body[data-btn-style="mac"] .center-greeting {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    letter-spacing: 0.3px;
+    /* Orange override only for name inside greeting */
+}
+
+/* --- BTC Widget (Pro Features) --- */
+.btc-widget {
+    /* Collapsed State */
+    width: 300px;
+    max-width: 0;
+    padding: 0;
+    margin-left: 0;
+    border: none;
+    opacity: 0;
+    overflow: hidden;
+    white-space: nowrap;
+
+    /* Visuals */
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    box-shadow: 0 24px 24px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+    height: fit-content;
+    align-self: flex-start;
+    color: #ccc;
+
+    /* Transition */
+    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    transform: translateX(-20px);
+}
+
+.btc-widget.visible {
+    max-width: 300px;
+    padding: 24px;
+    margin-left: 16px;
+    border: 1px solid var(--border-color);
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+.btc-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.btc-icon {
+    color: var(--primary-accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    font-size: 1.8rem !important;
+}
+
+.btc-price-display {
+    font-family: "SF Mono", "Menlo", "Roboto Mono", monospace;
+    font-weight: 700;
+    font-size: 1.6rem !important;
+    /* +2px approx from 1.5rem depending on base, bumping up */
+    color: var(--secondary-accent);
+    text-align: center;
+    width: 100%;
+    margin: 10px 0;
+    background: rgba(0, 0, 0, 0.3) !important;
+    padding: 12px 0;
+    border-radius: 12px;
+}
+
+.icon-btn-small {
+    background: transparent;
+    border: none;
+    color: #888;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.icon-btn-small:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+
+.icon-btn-small svg {
+    display: block;
+}
+
+/* Locked State (Seasonal Color) */
+.icon-btn-small.locked {
+    color: var(--primary-accent);
+}
+
+/* Unlocked/Default State (Dimmed) */
+.icon-btn-small {
+    color: rgba(255, 255, 255, 0.3);
+    /* Subtle dim for unlocked */
+}
+
+/* Mac Button Style Override for BTC elements */
+body[data-btn-style="mac"] .btc-icon {
+    color: #FF9F0A !important;
+}
+
+body[data-btn-style="mac"] .btc-price-display {
+    color: #FF9F0A !important;
+}
+
+body[data-btn-style="mac"] .icon-btn-small.locked {
+    color: #FF9F0A !important;
+}
+
+/* Input Inputs (BTC/USDT) Styling */
+.btc-input-group {
+    width: 100%;
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.btc-input-label {
+    font-size: 0.75rem;
+    color: #888;
+    margin-left: 4px;
+}
+
+.btc-input-group input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    /* Glass Background */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 12px;
+    border-radius: 12px;
+    font-family: "SF Mono", "Menlo", "Roboto Mono", monospace;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.btc-input-group input:focus {
+    border-color: var(--primary-accent);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Mac Style Input Override */
+body[data-btn-style="mac"] .btc-input-group input:focus {
+    border-color: #FF9F0A !important;
+}
+
+/* Visual Tab Input Styling */
+.settings-input,
+.settings-select {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-color);
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", sans-serif;
+}
+
+/* Fix Dark Background for Options */
+.settings-select option {
+    background: #1a1a1a;
+    color: white;
+}
+
+.settings-input:focus,
+.settings-select:focus {
+    border-color: var(--primary-accent);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+body[data-btn-style="mac"] .settings-input:focus,
+body[data-btn-style="mac"] .settings-select:focus,
+body[data-btn-style="mac"] .input-std:focus {
+    border-color: #FF9F0A !important;
+}
+
+/* Clear Wallpaper Button (Ghost Danger) */
+.btn-clear-wallpaper {
+    background: transparent;
+    border: 1px solid rgba(207, 53, 46, 0.2);
+    color: rgba(207, 53, 46, 0.8);
+    padding: 6px 14px;
+    font-size: 0.85rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+}
+
+.btn-clear-wallpaper:hover {
+    background: rgba(207, 53, 46, 0.1);
+    border-color: #cf352e;
+    color: #cf352e;
+}
+
+/* Dice Button Alignment */
+.input-group-row {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+}
+
+.random-dice-btn {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #aaa;
+    border-radius: 12px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 1.1rem;
+    height: auto;
+    /* Inherit from container flex */
+}
+
+.random-dice-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
+}
+
+.random-dice-btn.active {
+    color: var(--primary-accent);
+    border-color: var(--primary-accent);
+    background: rgba(58, 125, 255, 0.1);
+}
+
+body[data-btn-style="mac"] .random-dice-btn.active {
+    color: #FF9F0A !important;
+    border-color: #FF9F0A !important;
+    background: rgba(255, 159, 10, 0.1) !important;
+}
+
+/* Pro Features Toggle UI inside Settings */
+.pro-badge {
+    background: linear-gradient(135deg, #FFD700, #FDB931);
+    color: black;
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    margin-left: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Low Power Mode Indicator */
+.low-power-indicator {
+    display: none;
+    /* Hidden by default */
+    font-size: 0.7rem;
+    color: #888;
+    border: 1px solid #444;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+/* Header Controls (Delta, etc) */
+.header-controls {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+    opacity: 0;
+    max-height: 0;
+    /* Use max-height for slide transition */
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.5, 1, 0.5, 1);
+    transform: translateY(-10px);
+    margin-bottom: 0;
+}
+
+.header-controls.visible {
+    opacity: 1;
+    max-height: 70px;
+    margin-bottom: 20px;
+    transform: translateY(0);
+    overflow: visible;
+}
+
+.header-left {
+    display: flex;
+    gap: 10px;
+    margin-top: 0;
+    align-items: center;
+}
+
+.btn-delta-header {
+    background: rgba(30, 30, 30, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--primary-accent);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 55px !important;
+    height: 55px !important;
+    font-size: 1.4rem !important;
+    padding: 0;
+    border-radius: 12px;
+    box-shadow: none !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+body[data-btn-style="mac"] .btn-delta-header {
+    color: #FF9F0A !important;
+}
+
+.btn-delta-header:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--primary-accent) !important;
+    box-shadow: 0 0 15px var(--primary-accent) !important;
+    color: var(--primary-accent);
+}
+
+body[data-btn-style="mac"] .btn-delta-header:hover {
+    border-color: #FF9F0A !important;
+    box-shadow: 0 0 15px #FF9F0A !important;
+}
+
+.btn-delta-header.active {
+    background: var(--primary-accent) !important;
+    color: white !important;
+    border: 1px solid var(--primary-accent) !important;
+    box-shadow: 0 0 10px var(--primary-accent) !important;
+}
+
+body[data-btn-style="mac"] .btn-delta-header.active {
+    background: #FF9F0A !important;
+    border-color: #FF9F0A !important;
+    box-shadow: 0 0 10px #FF9F0A !important;
+}
+
+
+.btn-delta-header:active {
+    transform: translateY(0);
+}
+
+/* Brand Letter Styling */
+.brand-letter {
+    display: inline-block;
+    position: relative;
+}
+
+/* Seasonal Hat - Generic Positioning */
+/* Specific hats are handled by emoji content in JS, this just handles basics */
+.seasonal-hat {
+    pointer-events: none;
+    line-height: 1;
+}
+
+@keyframes hatBounce {
+
+    0%,
+    100% {
+        transform: rotate(-20deg) translateY(0);
+    }
+
+    50% {
+        transform: rotate(-20deg) translateY(-5px);
+    }
+}
+
+/* Particle Container - FIX: Z-index increased to match Monolith behavior */
+#particleContainer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    /* Важно: клики проходят сквозь частицы */
+    z-index: 9999;
+    /* Поднимаем над всем интерфейсом */
+    display: block;
+    overflow: hidden;
+}
+
+/* Particle Style - FIX: Ensure animation matches JS duration override */
+.particle {
+    position: absolute;
+    top: -50px;
+    color: #FFF;
+    user-select: none;
+    animation-name: fall;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+/* Falling Animation with Rotation */
+@keyframes fall {
+    0% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    100% {
+        transform: translateY(110vh) rotate(360deg);
+    }
+}
+
+.dice-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: #888;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    width: 36px;
+    height: 36px;
+    align-self: center;
+    /* Center vertically in the flex row */
+}
+
+.dice-btn:hover,
+.dice-btn.active {
+    color: var(--secondary-accent);
+    border-color: var(--secondary-accent);
+    background: rgba(44, 212, 167, 0.1);
+    transform: rotate(180deg);
+}
+
+body[data-btn-style="mac"] .dice-btn:hover,
+body[data-btn-style="mac"] .dice-btn.active {
+    color: #FF9F0A;
+    border-color: #FF9F0A;
+    background: rgba(255, 159, 10, 0.1);
+}
+
+.dice-btn.active {
+    box-shadow: 0 0 10px rgba(44, 212, 167, 0.2);
+}
+
+.dice-icon {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2;
+}
+
+.locked-field-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.locked-field-wrapper input:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: transparent;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+/* Info Icon in Settings */
+.settings-info {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 30px;
+    position: relative;
+    cursor: help;
+}
+
+.info-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid #666;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-family: serif;
+    font-style: italic;
+    transition: all 0.2s;
+}
+
+.info-icon:hover {
+    color: #aaa;
+    border-color: #aaa;
+}
+
+.info-tooltip {
+    position: absolute;
+    bottom: 30px;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: 260px;
+    background: rgba(30, 30, 30, 0.95);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s;
+    z-index: 200;
+    pointer-events: none;
+}
+
+.settings-info:hover .info-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0) !important;
+}
+
+.hotkey-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.hotkey-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 0.8rem;
+    color: #ccc;
+}
+
+.kbd {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: "SF Mono", "Menlo", "Roboto Mono", monospace;
+    font-size: 0.75rem;
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+/* Settings Inputs - Unified Mac/Glass Style */
+.settings-input,
+.settings-select {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+    outline: none;
+    transition: border-color 0.2s;
+    font-family: inherit;
+}
+
+.settings-select option {
+    background: #1a1a1a !important;
+    color: white !important;
+}
+
+.settings-input:focus,
+.settings-select:focus {
+    border-color: var(--primary-accent);
+}
+
+body[data-btn-style="mac"] .settings-input:focus,
+body[data-btn-style="mac"] .settings-select:focus {
+    border-color: #FF9F0A !important;
+}
+
+/* History Container Layout */
+.history-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 20px;
+    height: 100%;
+    padding-top: 75px;
+}
+
+.history-column {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+}
+
+.btc-widget {
+    flex-shrink: 0;
+}
+
+.history-panel .history-list {
+    flex: 1;
+    overflow-y: auto;
+}
