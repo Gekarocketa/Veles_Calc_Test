@@ -1,14 +1,7 @@
 // --- Configuration: Birthday List ---
 const TEAM_BIRTHDAYS = [
-    { name: "Cleo", date: "03.02" },
     { name: "Lucky", date: "09.04" },
     { name: "Veles", date: "06.04" },
-    { name: "Alma", date: "03.02" },
-    { name: "Odes Sea", date: "03.02" },
-    { name: "Neo", date: "20.05" },
-    { name: "Oskar", date: "03.02" },
-    { name: "Kate", date: "03.02" },
-    { name: "Brutix", date: "04.02" },
     { name: "Koffi", date: "14.11" },
 
 ];
