@@ -239,16 +239,15 @@ function updateUserGreeting() {
     let htmlContent, fullGreeting;
 
     if (window.isRandomGreeting) {
-        // Random Mode - use current random phrase
-        const prefix = window.currentRandomPhrase;
+        // Если вдруг фраза пустая, берем дефолт, чтобы не упасть
+        const prefix = window.currentRandomPhrase || "Welcome,";
 
         if (hasName) {
-            // Random phrase + Name
             htmlContent = `${prefix} <span style="color: var(--secondary-accent); font-weight: 600;">${window.userName}</span>`;
             fullGreeting = `${prefix} ${window.userName}`;
         } else {
-            // Random phrase only - remove trailing comma
-            const cleanPrefix = prefix.replace(/,\s*$/, '');
+            // Убираем запятую на конце, если она есть
+            const cleanPrefix = prefix.toString().replace(/,\s*$/, '');
             htmlContent = cleanPrefix;
             fullGreeting = cleanPrefix;
         }
