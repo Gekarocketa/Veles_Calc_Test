@@ -5,6 +5,7 @@ if (window.location.search.includes('v=')) {
 }
 
 // --- 1. Global State Management (VERY TOP) ---
+window.particleOpacity = parseInt(localStorage.getItem('calcParticleOpacity')) || 70;
 window.isPotatoMode = JSON.parse(localStorage.getItem('calcPotatoMode')) || false;
 window.isProFeaturesEnabled = JSON.parse(localStorage.getItem('calcProFeatures')) || false;
 window.isMacButtons = JSON.parse(localStorage.getItem('calcMacButtons')) || false;
@@ -16,7 +17,7 @@ window.isRandomGreeting = JSON.parse(localStorage.getItem('calcRandomGreeting'))
 window.currentRandomPhrase = localStorage.getItem('calcLastRandomPhrase') || "Hello,";
 window.userName = localStorage.getItem('calcUserName') || '';
 window.greetingPrefix = localStorage.getItem('calcGreetingPrefix') || '';
-window.greetingPos = localStorage.getItem('calcGreetingPos') || 'top-right';
+window.greetingPos = localStorage.getItem('calcGreetingPos') || 'replace-logo';
 
 window.btcPrice = 0;
 window.isSoundEnabled = JSON.parse(localStorage.getItem('calcSoundEnabled')) || false;
@@ -79,6 +80,25 @@ window.addEventListener('load', () => {
     // 2. Init Controls Listeners
     initVisualCustomization();
 
+    const partSlider = document.getElementById('particleOpacitySlider');
+    const partValueText = document.getElementById('particleOpacityValue');
+
+    if (partSlider) {
+        partSlider.value = window.particleOpacity;
+        if (partValueText) partValueText.textContent = window.particleOpacity + '%';
+
+        partSlider.addEventListener('input', (e) => {
+            window.particleOpacity = parseInt(e.target.value);
+            localStorage.setItem('calcParticleOpacity', window.particleOpacity);
+            if (partValueText) partValueText.textContent = window.particleOpacity + '%';
+
+            // Вызываем функцию мгновенного обновления (создадим её в effects.js)
+            if (typeof updateActiveParticlesOpacity === 'function') {
+                updateActiveParticlesOpacity();
+            }
+        });
+    }
+
     // 3. Apply Settings (Potato mode, Mac buttons etc)
     applySettings();
     applyPotatoMode();
@@ -138,15 +158,15 @@ window.addEventListener('load', () => {
        _.-'\`\`                    \`\`'-._
      -'                                '-
 
-Типа                              88                                     
+ Типа                              88                                     
                                   88                    ,d               
                                   88                    88               
-8b,dPPYba,  ,adPPYba,   ,adPPYba, 88   ,d8  ,adPPYba, MM88MMM  
-88P'   "Y8 a8"     "8a a8"     "" 88 ,a8"  a8P_____88   88    
-88         8b       d8 8b         8888[    8PP"""""""   88    
-88         "8a,   ,a8" "8a,   ,aa 88\`"Yba, "8b,   ,aa   88,  
-88          \`"YbbdP"'  \`"Ybbd8"'  88   \`Y8a \`"Ybbd8"'   "Y888 🚀
-`,
+ 8b,dPPYba,  ,adPPYba,   ,adPPYba, 88   ,d8  ,adPPYba, MM88MMM  
+ 88P'   "Y8 a8"     "8a a8"     "" 88 ,a8"  a8P_____88   88    
+ 88         8b       d8 8b         8888[    8PP"""""""   88    
+ 88         "8a,   ,a8" "8a,   ,aa 88\`"Yba, "8b,   ,aa   88,  
+ 88          \`"YbbdP"'  \`"Ybbd8"'  88   \`Y8a \`"Ybbd8"'   "Y888 🚀
+ `,
         'color: #3A7DFF; font-weight: bold; font-family: monospace; font-size: 16px;'
     );
     console.log(
@@ -242,7 +262,7 @@ function initVisualCustomization() {
         if (window.isRandomGreeting) {
             updateRandomPhrase();
         }
-    }, 30 * 30 * 1000); // 30 minutes correctly in ms
+    }, 30 * 30 * 1000); // 15 minutes correctly in ms
 }
 
 // Click to Copy Listener
@@ -438,43 +458,48 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-// Global Paste Listener
+// Global Paste Listener 
 window.addEventListener('paste', (e) => {
     const target = e.target;
-    const isInput = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable;
 
-    // 1. If user is pasting into a specific field (Table, Settings, etc.), let browser handle it.
-    //    Exception: If pasting into the main #display, we might want to sanitize, but default behavior is usually fine.
-    //    Actually, let's intercept paste into #display too, to ensure we sanitize garbage.
-    if (isInput && target.id !== 'display') return;
+    // 1. Если юзер вставляет текст в таблицу правил или в настройки (имена, ссылки)
+    // Мы НЕ должны мешать. Даем браузеру вставить текст стандартно.
+    if (target.isContentEditable || (target.tagName === 'INPUT' && target.id !== 'display') || target.tagName === 'TEXTAREA') {
+        return;
+    }
 
-    // 2. Intercept Paste
+    // 2. Если мы здесь, значит вставка идет "в калькулятор" (даже если фокус не на поле)
     e.preventDefault();
 
-    // Get text
+    // Получаем текст из буфера
     const text = (e.clipboardData || window.clipboardData).getData('text');
     if (!text) return;
 
-    // 3. Sanitize (Allow digits, math operators, dots, commas)
-    // Remove letters and other garbage.
-    // Valid chars: 0-9 . , + - * / % ÷ × ( ) Δ
+    // 3. Санация (Оставляем только цифры, точки, запятые и математические знаки)
     const validCharsRegex = /[^0-9+\-*/%().,÷×Δ\s]/g;
     let cleanText = text.replace(validCharsRegex, '');
 
-    // Normalize
-    // REMOVED: cleanText = cleanText.replace(/,/g, '.'); <-- Allow commas!
+    // Нормализация знаков (заменяем визуальные крестики на компьютерные звездочки)
     cleanText = cleanText.replace(/÷/g, '/').replace(/×/g, '*');
 
-    // 4. Insert into Display
-    // If focus is not on display, focus it first.
-    if (document.activeElement !== display) {
-        display.focus();
-        // If we forced focus, maybe we want to append? Or replace?
-        // Standard calc behavior: Append.
-        // Move cursor to end if it wasn't focused.
-        const len = display.value.length;
-        display.setSelectionRange(len, len);
+    // 4. Вставка в дисплей
+    const disp = window.display || document.getElementById('display');
+    if (!disp) return;
+
+    // Если фокус не на поле ввода — принудительно ставим его туда
+    if (document.activeElement !== disp) {
+        disp.focus();
+        const len = disp.value.length;
+        disp.setSelectionRange(len, len);
     }
 
+    // Используем нашу функцию ввода
+    if (typeof inputSymbol === 'function') {
+        inputSymbol(cleanText);
+    }
 
+    // Обновляем шрифт (из calculator.js)
+    if (typeof adjustFontSize === 'function') {
+        adjustFontSize();
+    }
 });
