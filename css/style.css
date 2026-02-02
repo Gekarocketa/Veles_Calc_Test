@@ -75,10 +75,14 @@ body {
     padding: 40px 20px;
     margin-left: 0;
     transition: margin-left 0.3s ease;
+    position: relative;
+    z-index: 10;
 }
 
 .help-panel:not(.hidden)~.workspace {
     margin-left: 800px;
+    position: relative;
+    z-index: 10;
 }
 
 /* Calculator Column Wrapper */
@@ -783,7 +787,7 @@ button:active {
     left: 20px;
     display: flex;
     gap: 10px;
-    z-index: 1001;
+    z-index: 10;
     /* Above Help Panel */
     transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
@@ -968,7 +972,8 @@ body[data-btn-style="mac"] .fee-btn:hover {
     padding: 24px;
     border: 1px solid var(--border-color);
     box-shadow: 0 24px 40px rgba(0, 0, 0, 0.5);
-    z-index: 100;
+    z-index: 200 !important;
+
     opacity: 1;
     /* Smooth Height Morphing */
     transition: opacity 0.2s, transform 0.2s, height 0.3s cubic-bezier(0.25, 1, 0.5, 1), width 0.3s ease;
@@ -1019,6 +1024,7 @@ body[data-btn-style="mac"] .fee-btn:hover {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
+    gap: 20px;
 }
 
 .settings-label {
@@ -1091,8 +1097,10 @@ input:checked+.slider:before {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.4);
-    z-index: 90;
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 100;
 }
 
 .modal-overlay.hidden {
@@ -1162,6 +1170,7 @@ input:checked+.slider:before {
 /* Dimming Slider */
 .settings-slider {
     -webkit-appearance: none;
+    appearance: none;
     width: 100%;
     max-width: 120px;
     height: 4px;
@@ -1191,7 +1200,7 @@ input:checked+.slider:before {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -1;
+    z-index: -2;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -1636,18 +1645,25 @@ body[data-btn-style="mac"] .btn-delta-header.active {
 }
 
 /* Particle Container - FIX: Z-index increased to match Monolith behavior */
-#particleContainer {
+#particleContainerFront {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
     pointer-events: none;
-    /* Важно: клики проходят сквозь частицы */
-    z-index: 9999;
-    /* Поднимаем над всем интерфейсом */
-    display: block;
-    overflow: hidden;
+    z-index: 20;
+}
+
+/* 2. Частицы на заднем плане (-1) */
+#particleContainerBack {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: -1;
 }
 
 /* Particle Style - FIX: Ensure animation matches JS duration override */
