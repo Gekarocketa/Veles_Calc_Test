@@ -79,10 +79,17 @@ function toggleAutoCopy(checkbox) {
 
 function toggleSettingsModal() {
     const modal = document.getElementById('settingsModal');
+    const updateModal = document.getElementById('updateModal'); // Добавляем проверку
     const overlay = document.getElementById('modalOverlay');
+
+    // БЛОКИРОВКА: Если окно обновления сейчас на экране, не даем открыть настройки
+    if (updateModal && !updateModal.classList.contains('hidden')) {
+        return;
+    }
+
     modal.classList.toggle('hidden');
     overlay.classList.toggle('hidden');
-    playSound('ui'); // Sound Hook
+    playSound('ui');
 }
 
 function hardRefresh() {
@@ -430,10 +437,9 @@ function closeUpdateModal() {
     const modal = document.getElementById('updateModal');
     const overlay = document.getElementById('modalOverlay');
 
-    if (modal) modal.classList.add('hidden');
-    if (overlay) overlay.classList.add('hidden');
+    if (modal) modal.classList.add('hidden'); // Явно скрываем
+    if (overlay) overlay.classList.add('hidden'); // Явно скрываем слой
 
-    // Записываем, что юзер видел обновление
     localStorage.setItem(UPDATE_VERSION_KEY, 'true');
     playSound('ui');
 }
