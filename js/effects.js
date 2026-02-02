@@ -1,13 +1,22 @@
 // --- Configuration: Birthday List ---
 const TEAM_BIRTHDAYS = [
     { name: "Cleo", date: "03.02" },
-    { name: "Admin", date: "20.05" },
+    { name: "Lucky", date: "09.04" },
+    { name: "Veles", date: "06.04" },
+    { name: "Alma", date: "03.02" },
+    { name: "Odes Sea", date: "03.02" },
+    { name: "Neo", date: "20.05" },
+    { name: "Oskar", date: "03.02" },
+    { name: "Kate", date: "03.02" },
+    { name: "Brutix", date: "04.02" },
+    { name: "Koffi", date: "14.11" },
+
 ];
 
 const RANDOM_GREETINGS = [
     "Wake up,", "Time to cook,", "Lets go,", "Focus,", "Big moves,", "Hello,", "Greetings,", "Good vibes,", "Crypto King,", "Arbitrage God,",
     "Stay sharp,", "Money moves,", "Grind time,", "Lets build,", "Stay hungry,", "Keep pushing,", "Make it happen,", "Level up,", "Be great,", "Dream big,",
-    "Work hard,", "Stay humble,", "Be kind,", "Good morning,", "Rise & shine,", "Lets win,", "No limits,", "Stay focused,", "Keep going,", "Never settle,",
+    "Work smart,", "Stay humble,", "Be kind,", "Good morning,", "Rise & shine,", "Lets win,", "No limits,", "Stay focused,", "Keep going,", "Never settle,",
     "You got this,", "Believe,", "Execute,", "Dominate,", "Crush it,", "Lets trade,", "Market open,", "New highs,", "Stay green,", "HODL strong,",
     "To the moon,", "Diamond hands,", "Smart money,", "Alpha state,", "Flow state,", "Be legendary,", "Create value,", "Solve problems,", "Think big,", "Action time,",
     "Поехали,", "Тихо, я считаю,", "Зара буде профіт,", "Рахуй, не гадай,", "Все по плану? ", "Шо ти дядя ? "
@@ -316,19 +325,22 @@ function toggleParticles(checkbox) {
 
     if (window.isParticlesEnabled) {
         const effect = getEffectFromSettings();
-        applyVisualEffects(false); // Re-apply without forcing dimming reset
+        applyVisualEffects(false);
     } else {
-        const container = document.getElementById('particleContainer');
-        if (container) container.innerHTML = '';
+        // Очищаем ОБА новых контейнера
+        const f = document.getElementById('particleContainerFront');
+        const b = document.getElementById('particleContainerBack');
+        if (f) f.innerHTML = '';
+        if (b) b.innerHTML = '';
     }
 }
 
 function createParticles(type) {
-    // FIX: Get container dynamically to ensure it exists
-    const container = document.getElementById('particleContainer');
-    if (!container) return;
+    const containerFront = document.getElementById('particleContainerFront');
+    const containerBack = document.getElementById('particleContainerBack');
 
-    container.innerHTML = '';
+    if (containerFront) containerFront.innerHTML = '';
+    if (containerBack) containerBack.innerHTML = '';
 
     if (type === 'none' || !window.isParticlesEnabled || window.isPotatoMode) return;
 
@@ -339,18 +351,49 @@ function createParticles(type) {
     else if (type === 'party') particles = ['🎉', '✨', '🎈', '🥳'];
     else return;
 
+    const globalAlpha = window.particleOpacity / 100; // Наш коэффициент
+
     for (let i = 0; i < 50; i++) {
         const flake = document.createElement('div');
         flake.classList.add('particle');
         flake.textContent = particles[Math.floor(Math.random() * particles.length)];
-        // Random positioning
+
         flake.style.left = Math.random() * 100 + 'vw';
-        // Random fall speed
         flake.style.animationDuration = (Math.random() * 5 + 3) + 's';
         flake.style.fontSize = (Math.random() * 10 + 10) + 'px';
-        flake.style.opacity = Math.random() * 0.7 + 0.3;
         flake.style.animationDelay = Math.random() * 5 + 's';
 
-        container.appendChild(flake);
+        // Генерируем случайную базу (от 0.3 до 1.0)
+        const baseOpacity = Math.random() * 0.7 + 0.3;
+        flake.dataset.baseOpacity = baseOpacity; // Сохраняем её!
+
+        // Устанавливаем итоговую прозрачность
+        flake.style.opacity = baseOpacity * globalAlpha;
+
+        if (Math.random() < 0.7) {
+            // 70% назад
+            flake.style.filter = 'blur(1px)';
+            flake.dataset.isBack = "true";
+            flake.style.opacity = (baseOpacity * globalAlpha) * 0.5; // Еще слабее сзади
+            if (containerBack) containerBack.appendChild(flake);
+        } else {
+            // 30% вперед
+            if (containerFront) containerFront.appendChild(flake);
+        }
     }
+}
+function updateActiveParticlesOpacity() {
+    const particles = document.querySelectorAll('.particle');
+    const globalAlpha = window.particleOpacity / 100;
+
+    particles.forEach(p => {
+        const base = parseFloat(p.dataset.baseOpacity) || 0.8;
+        const isBack = p.dataset.isBack === "true";
+
+        // Пересчитываем: база * положение в ползунке * (0.5 если частица сзади)
+        let finalOpacity = base * globalAlpha;
+        if (isBack) finalOpacity *= 0.5;
+
+        p.style.opacity = finalOpacity;
+    });
 }
